@@ -3,74 +3,75 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-async function run() {
+async function main() {
+  // Create admin role
   const adminRole = await prisma.role.upsert({
     where: { name: 'admin' },
     update: {},
-    create: { name: 'admin' },
-  });
-  const managerRole = await prisma.role.upsert({
-    where: { name: 'manager' },
-    update: {},
-    create: { name: 'manager' },
-  });
-  const residentRole = await prisma.role.upsert({
-    where: { name: 'resident' },
-    update: {},
-    create: { name: 'resident' },
+    create: {
+      name: 'admin',
+    },
   });
 
-  const perms = [
-    'manage_everything',
-    'approve_complaint',
-    'create_resident',
-    'update_resident',
-    'delete_resident',
-    'create_complaint',
-  ];
-
-  for (const name of perms) {
-    await prisma.permission.upsert({
-      where: { name },
+  // Create permissions
+  const permissions = await Promise.all([
+    prisma.permission.upsert({
+      where: { name: 'manage_users' },
       update: {},
-      create: { name },
-    });
-  }
+      create: { name: 'manage_users' },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'manage_roles' },
+      update: {},
+      create: { name: 'manage_roles' },
+    }),
+    prisma.permission.upsert({
+      where: { name: 'manage_complaints' },
+      update: {},
+      create: { name: 'manage_complaints' },
+    }),
+  ]);
 
-  const permMap = {
-    admin: perms,
-    manager: ['approve_complaint', 'create_resident', 'update_resident', 'delete_resident'],
-    resident: ['create_resident', 'update_resident', 'create_complaint'],
-  };
-
-  for (const [role, names] of Object.entries(permMap)) {
-    const roleId = (await prisma.role.findUnique({ where: { name: role } })).id;
-    for (const name of names) {
-      const permId = (await prisma.permission.findUnique({ where: { name } })).id;
-      await prisma.rolePermission.upsert({
-        where: { roleId_permissionId: { roleId, permissionId: permId } },
+  // Associate permissions with admin role
+  await Promise.all(
+    permissions.map((permission) =>
+      prisma.rolePermission.upsert({
+        where: {
+          roleId_permissionId: {
+            roleId: adminRole.id,
+            permissionId: permission.id,
+          },
+        },
         update: {},
-        create: { roleId, permissionId: permId },
-      });
-    }
-  }
+        create: {
+          roleId: adminRole.id,
+          permissionId: permission.id,
+        },
+      })
+    )
+  );
 
-  const password = await bcrypt.hash('secret', 10);
-  await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
+  // Create admin user
+  const passwordHash = await bcrypt.hash('!@ikzb5ssb666!@', 10);
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'mikaelhadler@gmail.com' },
     update: {},
-    create: { name: 'Admin', email: 'admin@example.com', passwordHash: password, roleId: adminRole.id },
+    create: {
+      name: 'Admin User',
+      email: 'mikaelhadler@gmail.com',
+      passwordHash,
+      roleId: adminRole.id,
+    },
   });
-  await prisma.user.upsert({
-    where: { email: 'manager@example.com' },
-    update: {},
-    create: { name: 'Manager', email: 'manager@example.com', passwordHash: password, roleId: managerRole.id },
-  });
-  await prisma.user.upsert({
-    where: { email: 'resident@example.com' },
-    update: {},
-    create: { name: 'Resident', email: 'resident@example.com', passwordHash: password, roleId: residentRole.id },
-  });
+
+  console.log('Admin user created:', adminUser);
 }
 
-run().finally(() => prisma.$disconnect());
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
