@@ -3,4 +3,21 @@ export default async function (fastify) {
     const { passwordHash, ...rest } = request.user;
     return rest;
   });
+
+  fastify.get('/users', {
+    preHandler: [fastify.authenticate, fastify.hasPermission('manage_users')]
+  }, async () => {
+    return fastify.prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
+  });
 }

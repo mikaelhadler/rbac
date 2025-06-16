@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -10,48 +10,52 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Plus, Search } from "lucide-react"
+import api from "@/services/api"
 
 interface User {
   id: string
   name: string
   email: string
-  role: string
-  status: "active" | "inactive"
+  role: {
+    name: string
+  }
 }
 
 export default function Users() {
   const [searchQuery, setSearchQuery] = useState("")
-  
-  // Mock data - replace with actual API call
-  const users: User[] = [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Admin",
-      status: "active",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "Manager",
-      status: "active",
-    },
-    {
-      id: "3",
-      name: "Bob Johnson",
-      email: "bob@example.com",
-      role: "User",
-      status: "inactive",
-    },
-  ]
+  const [users, setUsers] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const data = await api.request<User[]>('/api/users')
+        setUsers(data)
+      } catch (err) {
+        setError('Failed to fetch users')
+        console.error(err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
 
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (error) {
+    return <div className="text-destructive">{error}</div>
+  }
 
   return (
     <div className="space-y-4">
@@ -80,7 +84,6 @@ export default function Users() {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -89,18 +92,7 @@ export default function Users() {
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      user.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
-                </TableCell>
+                <TableCell>{user.role.name}</TableCell>
                 <TableCell className="text-right">
                   <Button variant="ghost" size="sm">
                     Edit
