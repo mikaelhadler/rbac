@@ -1,45 +1,113 @@
-import { useForm } from 'react-hook-form'
-import { useEffect } from 'react'
-import api from '../../services/api'
-import { useAuth } from '../../hooks/useAuth'
-import { uploadToCloudinary } from '../../lib/cloudinary'
+import { useState } from "react"
+import { useAuth } from "@/hooks/useAuth"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-interface Profile {
-  name: string
-  password?: string
-  avatar?: string
-  avatarFile?: FileList
-}
+export default function Me() {
+  const { user } = useAuth()
+  const [isEditing, setIsEditing] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-export default function ProfilePage() {
-  const { user, token, login } = useAuth()
-  const { register, handleSubmit, reset } = useForm<Profile>({
-    defaultValues: { name: user?.name },
-  })
+  if (!user) {
+    return null
+  }
 
-  useEffect(() => {
-    reset({ name: user?.name })
-  }, [user])
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setIsLoading(true)
 
-  const onSubmit = async (data: Profile) => {
-    if (data.avatarFile && data.avatarFile.length > 0) {
-      data.avatar = await uploadToCloudinary(data.avatarFile[0])
+    try {
+      // TODO: Replace with actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      setIsEditing(false)
+    } catch (error) {
+      console.error("Failed to update profile:", error)
+    } finally {
+      setIsLoading(false)
     }
-    await api.request('/me', { method: 'PUT', body: JSON.stringify(data) })
-    const updated = await api.request('/me')
-    login(token!, updated)
-    reset()
   }
 
   return (
-    <div>
-      <h1>My Profile</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input placeholder="Name" {...register('name')} />
-        <input type="password" placeholder="Password" {...register('password')} />
-        <input type="file" {...register('avatarFile')} />
-        <button type="submit">Save</button>
-      </form>
+    <div className="max-w-2xl mx-auto">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-4">
+            <Avatar className="h-16 w-16">
+              <AvatarImage src={`https://avatar.vercel.sh/${user.email}`} />
+              <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div>
+              <CardTitle>{user.name}</CardTitle>
+              <CardDescription>{user.email}</CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                defaultValue={user.name}
+                disabled={!isEditing || isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                defaultValue={user.email}
+                disabled={!isEditing || isLoading}
+              />
+            </div>
+            {isEditing && (
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">Current Password</Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+            {isEditing && (
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+            <div className="flex justify-end space-x-2">
+              {isEditing ? (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsEditing(false)}
+                    disabled={isLoading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={isLoading}>
+                    {isLoading ? "Saving..." : "Save Changes"}
+                  </Button>
+                </>
+              ) : (
+                <Button type="button" onClick={() => setIsEditing(true)}>
+                  Edit Profile
+                </Button>
+              )}
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

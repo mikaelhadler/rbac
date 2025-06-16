@@ -18,6 +18,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 export function login(email: string, password: string) {
+  console.log('login', email, password);
+  
   return request<{ token: string; user: any }>('/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),

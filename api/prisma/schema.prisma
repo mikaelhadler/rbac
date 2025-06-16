@@ -16,6 +16,7 @@ model User {
   passwordHash String
   roleId       Int
   role         Role     @relation(fields: [roleId], references: [id])
+  complaints   Complaint[]
 }
 
 model Role {

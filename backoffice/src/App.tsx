@@ -1,13 +1,72 @@
-import { BrowserRouter } from 'react-router-dom'
-import { AppRoutes } from './routes'
-import { AuthProvider } from './hooks/useAuth'
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import { MainLayout } from "@/components/layout/main-layout"
+import Login from "@/pages/Login"
+import Dashboard from "@/pages/Dashboard"
+import Users from "@/pages/Users"
+import Residents from "@/pages/Residents"
+import Complaints from "@/pages/Complaints"
+import Me from "@/pages/Me"
+import { PrivateRoute } from "@/components/PrivateRoute"
 
-export default function App() {
+function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
-    </BrowserRouter>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Users />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/residents"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Residents />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/complaints"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Complaints />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/me"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Me />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   )
 }
+
+export default App

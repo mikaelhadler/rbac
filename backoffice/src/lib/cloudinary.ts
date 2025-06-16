@@ -6,7 +6,7 @@ export interface CloudinaryUploadOptions {
 export async function uploadToCloudinary(file: File, options: CloudinaryUploadOptions = {}): Promise<string> {
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET)
+  formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_SECRET)
 
   if (options.folder) {
     formData.append('folder', options.folder)

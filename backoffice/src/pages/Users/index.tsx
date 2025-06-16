@@ -1,53 +1,116 @@
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import api from '../../services/api'
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Plus, Search } from "lucide-react"
 
 interface User {
-  id?: string
+  id: string
   name: string
   email: string
-  password?: string
   role: string
+  status: "active" | "inactive"
 }
 
-export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([])
-  const { register, handleSubmit, reset } = useForm<User>()
+export default function Users() {
+  const [searchQuery, setSearchQuery] = useState("")
+  
+  // Mock data - replace with actual API call
+  const users: User[] = [
+    {
+      id: "1",
+      name: "John Doe",
+      email: "john@example.com",
+      role: "Admin",
+      status: "active",
+    },
+    {
+      id: "2",
+      name: "Jane Smith",
+      email: "jane@example.com",
+      role: "Manager",
+      status: "active",
+    },
+    {
+      id: "3",
+      name: "Bob Johnson",
+      email: "bob@example.com",
+      role: "User",
+      status: "inactive",
+    },
+  ]
 
-  const fetchUsers = async () => {
-    const data = await api.request<User[]>('/users')
-    setUsers(data)
-  }
-
-  useEffect(() => {
-    fetchUsers()
-  }, [])
-
-  const onSubmit = async (data: User) => {
-    await api.request<User>('/users', { method: 'POST', body: JSON.stringify(data) })
-    reset()
-    fetchUsers()
-  }
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
-    <div>
-      <h1>Users</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input placeholder="Name" {...register('name')} />
-        <input placeholder="Email" {...register('email')} />
-        <input placeholder="Password" {...register('password')} type="password" />
-        <select {...register('role')}>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="resident">Resident</option>
-        </select>
-        <button type="submit">Create</button>
-      </form>
-      <ul>
-        {users.map(u => (
-          <li key={u.id}>{u.name} - {u.email} ({u.role})</li>
-        ))}
-      </ul>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <Input
+            placeholder="Search users..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-[300px]"
+          />
+          <Button variant="outline" size="icon">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          Add User
+        </Button>
+      </div>
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredUsers.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      user.status === "active"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button variant="ghost" size="sm">
+                    Edit
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
