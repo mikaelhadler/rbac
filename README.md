@@ -1,30 +1,51 @@
-# RBAC Fastify API
+# Fastify RBAC Boilerplate
 
-Esta API demonstra um controle de acesso baseado em papeis (RBAC) usando Fastify e PostgreSQL.
+This project demonstrates a REST API built with Fastify, JWT authentication and Role-Based Access Control using PostgreSQL via Prisma.
 
-## Requisitos
+## Requirements
 
 - Node.js 20+
-- PostgreSQL
+- Docker (for PostgreSQL via `docker-compose`)
 
-## Instalação
+## Setup
 
-1. Copie o arquivo `db.sql` para o seu banco de dados e execute para criar as tabelas.
-2. Defina a variável de ambiente `DATABASE_URL` com a conexão do Postgres.
-3. Instale as dependências:
+1. Copy `.env` and adjust `DATABASE_URL` and `JWT_SECRET` as needed.
+2. Start PostgreSQL:
+
+```bash
+docker-compose up -d
+```
+
+3. Install dependencies and generate Prisma client:
 
 ```bash
 npm install
+npx prisma migrate deploy
+npm run seed
 ```
 
-4. Inicie o servidor:
+4. Start the API:
 
 ```bash
 npm start
 ```
 
-A API ficará disponível em `http://localhost:3000`.
+The server will be available at `http://localhost:3000`.
 
-## Uso
+## Project Structure
 
-Envie o cabeçalho `user-id` com o id do usuário autenticado para que as permissões sejam avaliadas. A rota `/admin` exige que o usuário tenha o papel `admin` e a rota `/profile` exige o papel `user`.
+- `prisma/schema.prisma` – data model and migrations
+- `src/plugins/` – authentication, permissions and Prisma plugins
+- `src/routes/` – route handlers (auth, users, residents, complaints)
+
+## Seeding
+
+The seed script creates the roles and permissions and inserts one user for each role (admin, manager and resident) with password `secret`.
+
+## Testing
+
+Run tests with:
+
+```bash
+npm test
+```

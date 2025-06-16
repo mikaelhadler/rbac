@@ -1,29 +1,24 @@
 import Fastify from 'fastify';
-import pgPlugin from './plugins/db.js';
-import rbacPlugin from './plugins/rbac.js';
+import prismaPlugin from './src/plugins/prisma.js';
+import authPlugin from './src/plugins/auth.js';
+import permissionsPlugin from './src/plugins/permissions.js';
+import authRoutes from './src/routes/auth.js';
+import usersRoutes from './src/routes/users.js';
+import residentsRoutes from './src/routes/residents.js';
+import complaintsRoutes from './src/routes/complaints.js';
 
 const fastify = Fastify({ logger: true });
 
-await fastify.register(pgPlugin);
-await fastify.register(rbacPlugin);
+await fastify.register(prismaPlugin);
+await fastify.register(authPlugin);
+await fastify.register(permissionsPlugin);
+
+await fastify.register(authRoutes);
+await fastify.register(usersRoutes);
+await fastify.register(residentsRoutes);
+await fastify.register(complaintsRoutes);
 
 fastify.get('/', async () => ({ status: 'ok' }));
-
-fastify.get('/admin', {
-  preHandler: fastify.rbac.requireRole('admin'),
-}, async () => {
-  return { message: 'hello admin' };
-});
-
-fastify.get('/profile', {
-  preHandler: fastify.rbac.requireRole('user'),
-}, async (request) => {
-  const user = await fastify.pg.query(
-    'SELECT id, email FROM users WHERE id=$1',
-    [request.user.id]
-  );
-  return { profile: user.rows[0] };
-});
 
 try {
   await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
