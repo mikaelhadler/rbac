@@ -8,6 +8,7 @@ import {
   UserCircle,
   MessageSquare,
   LogOut,
+  Shield
 } from "lucide-react"
 
 interface MainLayoutProps {
@@ -19,6 +20,7 @@ const navigation = [
   { name: "Users", href: "/users", icon: Users },
   { name: "Residents", href: "/residents", icon: UserCircle },
   { name: "Complaints", href: "/complaints", icon: MessageSquare },
+  { name: "Roles", href: "/roles", icon: Shield },
 ]
 
 export function MainLayout({ children }: MainLayoutProps) {

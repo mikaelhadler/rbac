@@ -77,8 +77,8 @@ function UserForm({ initialValues = {}, roles, isSubmitting, error, onSubmit, on
         <Input id="email" name="email" type="email" required disabled={isSubmitting} defaultValue={initialValues.email || ""} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" name="password" type="password" disabled={isSubmitting} required />
+      <Label htmlFor="password">{isEdit ? "New Password (leave blank to keep)" : "Password"}</Label>
+      <Input id="password" name="password" type="password" disabled={isSubmitting} required={!isEdit} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="roleId">Role</Label>
@@ -181,6 +181,7 @@ export default function Users() {
     }
   }
 
+
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -209,54 +210,56 @@ export default function Users() {
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add User
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create User</DialogTitle>
-              <DialogDescription>
-                Add a new user to the system. Fill in the details below.
-              </DialogDescription>
-            </DialogHeader>
-            <UserForm
-              roles={roles}
-              isSubmitting={isCreating}
-              error={createError}
-              onSubmit={handleCreateUser}
-              onCancel={() => setIsCreateDialogOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
-        <Dialog open={isEditDialogOpen} onOpenChange={open => {
-          setIsEditDialogOpen(open)
-          if (!open) setEditingUser(null)
-        }}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit User</DialogTitle>
-              <DialogDescription>
-                Update user details below.
-              </DialogDescription>
-            </DialogHeader>
-            <UserForm
-              initialValues={editingUser ? {
-                ...editingUser,
-                roleId: roles.find(r => r.name === editingUser.role.name)?.id?.toString() || undefined
-              } : {}}
-              roles={roles}
-              isSubmitting={isEditing}
-              error={editError}
-              onSubmit={handleEditUser}
-              onCancel={() => setIsEditDialogOpen(false)}
-              isEdit
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-2">
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add User
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create User</DialogTitle>
+                <DialogDescription>
+                  Add a new user to the system. Fill in the details below.
+                </DialogDescription>
+              </DialogHeader>
+              <UserForm
+                roles={roles}
+                isSubmitting={isCreating}
+                error={createError}
+                onSubmit={handleCreateUser}
+                onCancel={() => setIsCreateDialogOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+          <Dialog open={isEditDialogOpen} onOpenChange={open => {
+            setIsEditDialogOpen(open)
+            if (!open) setEditingUser(null)
+          }}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit User</DialogTitle>
+                <DialogDescription>
+                  Update user details below.
+                </DialogDescription>
+              </DialogHeader>
+              <UserForm
+                initialValues={editingUser ? {
+                  ...editingUser,
+                  roleId: roles.find(r => r.name === editingUser.role.name)?.id?.toString() || undefined
+                } : {}}
+                roles={roles}
+                isSubmitting={isEditing}
+                error={editError}
+                onSubmit={handleEditUser}
+                onCancel={() => setIsEditDialogOpen(false)}
+                isEdit
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="rounded-md border">

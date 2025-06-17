@@ -7,6 +7,7 @@ import Residents from "@/pages/Residents"
 import Complaints from "@/pages/Complaints"
 import Me from "@/pages/Me"
 import { PrivateRoute } from "@/components/PrivateRoute"
+import Roles from "./pages/Roles"
 
 function App() {
   return (
@@ -49,6 +50,16 @@ function App() {
             <PrivateRoute>
               <MainLayout>
                 <Complaints />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/roles"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Roles />
               </MainLayout>
             </PrivateRoute>
           }

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, UserCircle, MessageSquare, Building2 } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function Dashboard() {
   return (
@@ -89,24 +90,24 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <button className="w-full rounded-lg border p-4 text-left hover:bg-accent">
+              <Link to="/users" className="w-full block rounded-lg border p-4 text-left hover:bg-accent">
                 <div className="font-medium">Add New User</div>
                 <div className="text-sm text-muted-foreground">
                   Create a new user account
                 </div>
-              </button>
-              <button className="w-full rounded-lg border p-4 text-left hover:bg-accent">
+              </Link>
+              <Link to="/residents" className="w-full block rounded-lg border p-4 text-left hover:bg-accent">
                 <div className="font-medium">Register Resident</div>
                 <div className="text-sm text-muted-foreground">
                   Add a new resident to the system
                 </div>
-              </button>
-              <button className="w-full rounded-lg border p-4 text-left hover:bg-accent">
+              </Link>
+              <Link to="/complaints" className="w-full block rounded-lg border p-4 text-left hover:bg-accent">
                 <div className="font-medium">View Reports</div>
                 <div className="text-sm text-muted-foreground">
                   Access system reports and analytics
                 </div>
-              </button>
+              </Link>
             </div>
           </CardContent>
         </Card>

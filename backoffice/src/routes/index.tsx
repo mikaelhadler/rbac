@@ -6,6 +6,7 @@ import ResidentsPage from '../pages/Residents'
 import ComplaintsPage from '../pages/Complaints'
 import ProfilePage from '../pages/Me'
 import { PrivateRoute } from '../components/PrivateRoute'
+import RolesPage from '../pages/Roles'
 
 export function AppRoutes() {
   return (
@@ -40,6 +41,14 @@ export function AppRoutes() {
         element={
           <PrivateRoute>
             <ComplaintsPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/roles"
+        element={
+          <PrivateRoute>
+            <RolesPage />
           </PrivateRoute>
         }
       />
