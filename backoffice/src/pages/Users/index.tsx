@@ -128,9 +128,7 @@ export default function Users() {
   const [deletingUser, setDeletingUser] = useState<User | null>(null)
   const { user: currentUser } = useAuth()
 
-  console.log('Current user:', currentUser)
   const isAdmin = currentUser?.role?.name === "administrator"
-  console.log('Is admin:', isAdmin)
 
   useEffect(() => {
     async function fetchData() {
