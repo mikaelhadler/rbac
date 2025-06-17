@@ -44,8 +44,11 @@
     "create.title": "Create User",
     "create.description": "Enter the user details below.",
     "actions.createUser": "Add User",
-    "actions.saveChanges": "Save Changes"
-
+    "actions.saveChanges": "Save Changes",
+    "error": {
+      "fetchFailed": "Failed to fetch users"
+    },
+    "noUsers": "No users found"
   },
   "roles": {
     "table.name": "Name",
@@ -53,7 +56,10 @@
     "actions.addRole": "Add Role",
     "edit.title": "Edit Role",
     "edit.description": "Update the role name below.",
-    "edit.name": "Role Name"
+    "edit.name": "Role Name",
+    "create.title": "Create Role",
+    "create.description": "Add a new role to the system. Enter the role name below.",
+    "noRoles": "No roles found"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -93,7 +99,8 @@
     "building": "Building",
     "unit": "Unit",
     "status": "Status",
-    "actions": "Actions"
+    "actions": "Actions",
+    "noResidents": "No residents found"
   },
   "complaints": {
     "title": "Complaints",
@@ -116,6 +123,6 @@
       "approved": "Approved",
       "pending": "Pending"
     },
-    "noComplaints": "No complaints registered"
+    "noComplaints": "No complaints found"
   }
 }

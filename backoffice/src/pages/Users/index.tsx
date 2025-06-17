@@ -105,7 +105,7 @@ function UserForm({ initialValues = {}, roles, isSubmitting, error, onSubmit, on
           {t('common.actions.cancel')}
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting 
+          {isSubmitting
             ? (isEdit ? t('users.actions.saving') : t('users.actions.creating'))
             : (isEdit ? t('users.actions.saveChanges') : t('users.actions.createUser'))
           }
@@ -280,98 +280,106 @@ export default function Users() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role.name}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Dialog open={isEditDialogOpen && editingUser?.id === user.id} onOpenChange={(open) => {
-                      setIsEditDialogOpen(open)
-                      if (!open) setEditingUser(null)
-                    }}>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setEditingUser(user)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>{t('users.edit.title')}</DialogTitle>
-                          <DialogDescription>
-                            {t('users.edit.description')}
-                          </DialogDescription>
-                        </DialogHeader>
-                        <UserForm
-                          initialValues={user}
-                          roles={roles}
-                          isSubmitting={isEditing}
-                          error={editError}
-                          onSubmit={handleEditUser}
-                          onCancel={() => {
-                            setIsEditDialogOpen(false)
-                            setEditingUser(null)
-                          }}
-                          isEdit
-                        />
-                      </DialogContent>
-                    </Dialog>
-
-                    {isAdmin && (
-                      <Dialog open={isDeleteDialogOpen && deletingUser?.id === user.id} onOpenChange={(open) => {
-                        setIsDeleteDialogOpen(open)
-                        if (!open) setDeletingUser(null)
+            {filteredUsers.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  {t("users.noUsers")}
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredUsers.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role.name}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Dialog open={isEditDialogOpen && editingUser?.id === user.id} onOpenChange={(open) => {
+                        setIsEditDialogOpen(open)
+                        if (!open) setEditingUser(null)
                       }}>
                         <DialogTrigger asChild>
                           <Button
                             variant="ghost"
                             size="icon"
-                            onClick={() => setDeletingUser(user)}
+                            onClick={() => setEditingUser(user)}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Pencil className="h-4 w-4" />
                           </Button>
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
-                            <DialogTitle>{t('users.delete.title')}</DialogTitle>
+                            <DialogTitle>{t('users.edit.title')}</DialogTitle>
                             <DialogDescription>
-                              {t('users.delete.description', { name: user.name })}
+                              {t('users.edit.description')}
                             </DialogDescription>
                           </DialogHeader>
-                          {deleteError && (
-                            <div className="text-sm text-destructive">{deleteError}</div>
-                          )}
-                          <DialogFooter>
-                            <Button
-                              variant="outline"
-                              onClick={() => {
-                                setIsDeleteDialogOpen(false)
-                                setDeletingUser(null)
-                              }}
-                              disabled={isDeleting}
-                            >
-                              {t('common.actions.cancel')}
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              onClick={handleDeleteUser}
-                              disabled={isDeleting}
-                            >
-                              {isDeleting ? t('users.actions.deleting') : t('users.actions.delete')}
-                            </Button>
-                          </DialogFooter>
+                          <UserForm
+                            initialValues={user}
+                            roles={roles}
+                            isSubmitting={isEditing}
+                            error={editError}
+                            onSubmit={handleEditUser}
+                            onCancel={() => {
+                              setIsEditDialogOpen(false)
+                              setEditingUser(null)
+                            }}
+                            isEdit
+                          />
                         </DialogContent>
                       </Dialog>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+
+                      {isAdmin && (
+                        <Dialog open={isDeleteDialogOpen && deletingUser?.id === user.id} onOpenChange={(open) => {
+                          setIsDeleteDialogOpen(open)
+                          if (!open) setDeletingUser(null)
+                        }}>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeletingUser(user)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>{t('users.delete.title')}</DialogTitle>
+                              <DialogDescription>
+                                {t('users.delete.description', { name: user.name })}
+                              </DialogDescription>
+                            </DialogHeader>
+                            {deleteError && (
+                              <div className="text-sm text-destructive">{deleteError}</div>
+                            )}
+                            <DialogFooter>
+                              <Button
+                                variant="outline"
+                                onClick={() => {
+                                  setIsDeleteDialogOpen(false)
+                                  setDeletingUser(null)
+                                }}
+                                disabled={isDeleting}
+                              >
+                                {t('common.actions.cancel')}
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                onClick={handleDeleteUser}
+                                disabled={isDeleting}
+                              >
+                                {isDeleting ? t('users.actions.deleting') : t('users.actions.delete')}
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

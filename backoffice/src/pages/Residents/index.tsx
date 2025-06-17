@@ -94,30 +94,38 @@ export default function Residents() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredResidents.map((resident) => (
-              <TableRow key={resident.id}>
-                <TableCell className="font-medium">{resident.name}</TableCell>
-                <TableCell>{resident.email}</TableCell>
-                <TableCell>{resident.building}</TableCell>
-                <TableCell>{resident.unit}</TableCell>
-                <TableCell>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      resident.status === "active"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    }`}
-                  >
-                    {resident.status}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button variant="ghost" size="sm">
-                    Edit
-                  </Button>
+            {filteredResidents.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground py-8">
+                  {t("residents.noResidents")}
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              filteredResidents.map((resident) => (
+                <TableRow key={resident.id}>
+                  <TableCell className="font-medium">{resident.name}</TableCell>
+                  <TableCell>{resident.email}</TableCell>
+                  <TableCell>{resident.building}</TableCell>
+                  <TableCell>{resident.unit}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        resident.status === "active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {resident.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm">
+                      Edit
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>

@@ -51,7 +51,11 @@
     "create.title": "Criar Usuário",
     "create.description": "Insira os detalhes do usuário abaixo.",
     "actions.createUser": "Adicionar Usuário",
-    "actions.saveChanges": "Salvar Alterações"
+    "actions.saveChanges": "Salvar Alterações",
+    "error": {
+      "fetchFailed": "Falha ao buscar usuários"
+    },
+    "noUsers": "Nenhum usuário encontrado"
   },
   "roles": {
     "table.name": "Nome",
@@ -61,7 +65,8 @@
     "edit.description": "Atualize o nome da função abaixo.",
     "edit.name": "Nome da Função",
     "create.title": "Criar Função",
-    "create.description": "Adicione uma nova função ao sistema. Insira o nome da função abaixo."
+    "create.description": "Adicione uma nova função ao sistema. Insira o nome da função abaixo.",
+    "noRoles": "Nenhuma função encontrada"
   },
   "dashboard": {
     "title": "Painel",
@@ -101,7 +106,8 @@
     "building": "Prédio",
     "unit": "Apartamento",
     "status": "Status",
-    "actions": "Ações"
+    "actions": "Ações",
+    "noResidents": "Nenhum morador encontrado"
   },
   "complaints": {
     "title": "Reclamações",

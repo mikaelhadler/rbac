@@ -193,31 +193,39 @@ export default function Roles() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredRoles.map(role => (
-              <TableRow key={role.id}>
-                <TableCell>{role.id}</TableCell>
-                <TableCell>
-                  <span>{role.name}</span>
-                </TableCell>
-                <TableCell className="text-right">
-                  {deletingId === role.id ? (
-                    <div className="flex gap-2 justify-end">
-                      <Button size="sm" variant="destructive" onClick={() => handleDeleteRole(role.id)}>{t('common.actions.delete')}</Button>
-                      <Button size="sm" variant="outline" onClick={() => setDeletingId(null)}>{t('common.actions.cancel')}</Button>
-                    </div>
-                  ) : (
-                    <div className="flex gap-2 justify-end">
-                      <Button size="icon" variant="ghost" onClick={() => { setEditingId(role.id); setEditingName(role.name); setIsEditDialogOpen(true) }}><Pencil className="w-4 h-4" /></Button>
-                      <Button size="icon" variant="ghost" onClick={() => setDeletingId(role.id)}><Trash2 className="w-4 h-4" /></Button>
-                    </div>
-                  )}
-                  {deleteError && deletingId === role.id && <div className="text-xs text-destructive">{deleteError}</div>}
+            {filteredRoles.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
+                  {t("roles.noRoles")}
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              filteredRoles.map(role => (
+                <TableRow key={role.id}>
+                  <TableCell>{role.id}</TableCell>
+                  <TableCell>
+                    <span>{role.name}</span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {deletingId === role.id ? (
+                      <div className="flex gap-2 justify-end">
+                        <Button size="sm" variant="destructive" onClick={() => handleDeleteRole(role.id)}>{t('common.actions.delete')}</Button>
+                        <Button size="sm" variant="outline" onClick={() => setDeletingId(null)}>{t('common.actions.cancel')}</Button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 justify-end">
+                        <Button size="icon" variant="ghost" onClick={() => { setEditingId(role.id); setEditingName(role.name); setIsEditDialogOpen(true) }}><Pencil className="w-4 h-4" /></Button>
+                        <Button size="icon" variant="ghost" onClick={() => setDeletingId(role.id)}><Trash2 className="w-4 h-4" /></Button>
+                      </div>
+                    )}
+                    {deleteError && deletingId === role.id && <div className="text-xs text-destructive">{deleteError}</div>}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
     </div>
   )
-} 
+}
