@@ -3,17 +3,17 @@ import { Menu, Transition } from '@headlessui/react'
 import { useTranslation } from 'react-i18next'
 import { Globe } from 'lucide-react'
 
-const languages = [
-  { code: 'en', name: 'English' },
-  { code: 'pt', name: 'Português' }
-]
-
 export function LanguageSelector() {
   const { i18n, t } = useTranslation()
 
   const handleLanguageChange = (languageCode: string) => {
     i18n.changeLanguage(languageCode)
   }
+
+  const languages = [
+    { code: 'en', name: t('language.en') },
+    { code: 'pt', name: t('language.pt') }
+  ] as const
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -56,4 +56,4 @@ export function LanguageSelector() {
       </Transition>
     </Menu>
   )
-} 
+}

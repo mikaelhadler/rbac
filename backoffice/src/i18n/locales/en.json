@@ -74,7 +74,8 @@
     "users": "Users",
     "residents": "Residents",
     "complaints": "Complaints",
-    "roles": "Roles"
+    "roles": "Roles",
+    "title": "Backoffice"
   },
   "language": {
     "en": "English",
