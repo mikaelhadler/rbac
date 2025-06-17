@@ -99,6 +99,22 @@
     "all": "All",
     "pending": "Pending",
     "accepted": "Accepted",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "searchPlaceholder": "Search complaints...",
+    "error": {
+      "fetchFailed": "Failed to fetch complaints"
+    },
+    "table": {
+      "id": "ID",
+      "text": "Complaint",
+      "user": "User",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "approved": "Approved",
+      "pending": "Pending"
+    },
+    "noComplaints": "No complaints registered"
   }
 }

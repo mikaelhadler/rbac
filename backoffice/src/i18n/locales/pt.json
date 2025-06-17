@@ -108,6 +108,22 @@
     "all": "Todas",
     "pending": "Pendente",
     "accepted": "Aceita",
-    "rejected": "Rejeitada"
+    "rejected": "Rejeitada",
+    "searchPlaceholder": "Buscar reclamações...",
+    "error": {
+      "fetchFailed": "Falha ao buscar reclamações"
+    },
+    "table": {
+      "id": "ID",
+      "text": "Reclamação",
+      "user": "Usuário",
+      "status": "Status",
+      "actions": "Ações"
+    },
+    "status": {
+      "approved": "Aprovada",
+      "pending": "Pendente"
+    },
+    "noComplaints": "Nenhuma reclamação registrada"
   }
 }

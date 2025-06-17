@@ -1,6 +1,25 @@
 import { logActivity } from '../plugins/activityLog.js'
 
 export default async function (fastify) {
+  fastify.get('/complaints', {
+    preHandler: [fastify.authenticate, fastify.hasPermission('manage_complaints')]
+  }, async () => {
+    return fastify.prisma.complaint.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      },
+      orderBy: {
+        id: 'desc'
+      }
+    });
+  });
+
   fastify.post('/complaints', {
     preHandler: [fastify.authenticate, fastify.hasPermission('create_complaint')]
   }, async (request) => {
@@ -16,18 +35,30 @@ export default async function (fastify) {
     return complaint;
   });
 
-  fastify.put('/complaints/:id/approve', {
-    preHandler: [fastify.authenticate, fastify.hasPermission('approve_complaint')]
+  fastify.put('/complaints/:id', {
+    preHandler: [fastify.authenticate, fastify.hasPermission('manage_complaints')]
   }, async (request) => {
     const id = Number(request.params.id);
     const { approved } = request.body;
-    const updated = await fastify.prisma.complaint.update({ where: { id }, data: { approved } });
+    const updated = await fastify.prisma.complaint.update({
+      where: { id },
+      data: { approved },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
     await logActivity(fastify, {
       userId: request.user.id,
-      action: 'approve',
+      action: 'update',
       entity: 'complaint',
       entityId: updated.id,
-      details: `Complaint ${id} approved: ${approved}`
+      details: `Complaint ${id} ${approved ? 'approved' : 'rejected'}`
     })
     return updated;
   });
