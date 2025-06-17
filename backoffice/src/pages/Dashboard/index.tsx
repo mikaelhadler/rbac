@@ -3,8 +3,10 @@ import { Users, UserCircle, MessageSquare, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "@/services/api";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
+  const { t } = useTranslation()
   const [userCount, setUserCount] = useState<number | null>(null);
   const [userCountError, setUserCountError] = useState("");
   const [residentCount, setResidentCount] = useState<number | null>(null);
@@ -87,7 +89,7 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalUsers')}</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -99,7 +101,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Residents
+              {t('dashboard.totalResidents')}
             </CardTitle>
             <UserCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -116,7 +118,7 @@ export default function Dashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Active Complaints
+              {t('dashboard.activeComplaints')}
             </CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -135,7 +137,7 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle>{t('dashboard.recentActivity')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -170,7 +172,7 @@ export default function Dashboard() {
         </Card>
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>{t('dashboard.quickActions')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -178,27 +180,27 @@ export default function Dashboard() {
                 to="/users"
                 className="w-full block rounded-lg border p-4 text-left hover:bg-accent"
               >
-                <div className="font-medium">Add New User</div>
+                <div className="font-medium">{t('dashboard.addNewUser')}</div>
                 <div className="text-sm text-muted-foreground">
-                  Create a new user account
+                  {t('dashboard.createUserAccount')}
                 </div>
               </Link>
               <Link
                 to="/residents"
                 className="w-full block rounded-lg border p-4 text-left hover:bg-accent"
               >
-                <div className="font-medium">Register Resident</div>
+                <div className="font-medium">{t('dashboard.registerResident')}</div>
                 <div className="text-sm text-muted-foreground">
-                  Add a new resident to the system
+                  {t('dashboard.addNewResident')}
                 </div>
               </Link>
               <Link
                 to="/complaints"
                 className="w-full block rounded-lg border p-4 text-left hover:bg-accent"
               >
-                <div className="font-medium">View Reports</div>
+                <div className="font-medium">{t('dashboard.viewReports')}</div>
                 <div className="text-sm text-muted-foreground">
-                  Access system reports and analytics
+                  {t('dashboard.accessReports')}
                 </div>
               </Link>
             </div>

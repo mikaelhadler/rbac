@@ -1,0 +1,95 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Ocorreu um erro",
+    "actions.save": "Salvar",
+    "actions.cancel": "Cancelar",
+    "actions.delete": "Excluir",
+    "actions.edit": "Editar",
+    "actions.create": "Criar",
+    "search": "Buscar",
+    "actions": "Ações"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Sair",
+    "email": "E-mail",
+    "password": "Senha",
+    "signIn": "Entrar",
+    "signingIn": "Entrando...",
+    "invalidCredentials": "Credenciais inválidas"
+  },
+  "login": {
+    "title": "Login",
+    "description": "Faça login para continuar",
+    "email": "E-mail",
+    "emailPlaceholder": "Digite seu e-mail",
+    "password": "Senha",
+    "signIn": "Entrar",
+    "signingIn": "Entrando..."
+  },
+  "users": {
+    "title": "Usuários",
+    "actions.addUser": "Adicionar Usuário",
+    "edit.editUser": "Editar Usuário",
+    "edit.title": "Editar Usuário",
+    "edit.description": "Atualize os detalhes do usuário abaixo.",
+    "role": "Função",
+
+    "deleteUser": "Excluir Usuário",
+    "table.name": "Nome",
+    "table.email": "E-mail",
+    "table.role": "Função",
+    "table.actions": "Ações",
+    "newPassword": "Nova Senha",
+    "confirmDelete": "Tem certeza que deseja excluir {{name}}? Esta ação não pode ser desfeita.",
+    "table.creating": "Criando...",
+    "table.saving": "Salvando...",
+    "table.deleting": "Excluindo...",
+    "searchPlaceholder": "Buscar usuários...",
+    "selectRole": "Selecionar Função",
+    "create.title": "Criar Usuário",
+    "create.description": "Insira os detalhes do usuário abaixo.",
+    "actions.createUser": "Adicionar Usuário",
+    "actions.saveChanges": "Salvar Alterações"
+  },
+  "roles": {
+    "table.name": "Nome",
+    "searchPlaceholder": "Buscar funções...",
+    "actions.addRole": "Adicionar Função",
+    "edit.title": "Editar Função",
+    "edit.description": "Atualize o nome da função abaixo.",
+    "edit.name": "Nome da Função",
+    "create.title": "Criar Função",
+    "create.description": "Adicione uma nova função ao sistema. Insira o nome da função abaixo."
+  },
+  "dashboard": {
+    "title": "Painel",
+    "quickActions": "Ações Rápidas",
+    "addNewUser": "Adicionar Novo Usuário",
+    "createUserAccount": "Criar uma nova conta de usuário",
+    "registerResident": "Registrar Morador",
+    "addNewResident": "Adicionar um novo morador ao sistema",
+    "viewReports": "Ver Relatórios",
+    "accessReports": "Acessar relatórios e análises do sistema",
+    "totalUsers": "Total de Usuários",
+    "totalResidents": "Total de Moradores",
+    "activeComplaints": "Reclamações Ativas",
+    "recentActivity": "Atividade Recente"
+  },
+  "navigation": {
+    "dashboard": "Painel",
+    "users": "Usuários",
+    "residents": "Moradores",
+    "complaints": "Reclamações",
+    "roles": "Funções"
+  },
+  "language": {
+    "en": "Inglês",
+    "pt": "Português",
+    "select": "Selecionar idioma"
+  },
+  "error": {
+    "invalidCredentials": "Credenciais inválidas"
+  }
+} 

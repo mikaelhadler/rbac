@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Label } from "@/components/ui/label"
 import api from "@/services/api"
-import { Pencil, Trash2, Check, X, Search } from "lucide-react"
+import { Pencil, Trash2, Search } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { useTranslation } from "react-i18next"
 
 interface Role {
   id: number
@@ -13,6 +14,7 @@ interface Role {
 }
 
 export default function Roles() {
+  const { t } = useTranslation()
   const [roles, setRoles] = useState<Role[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
@@ -98,7 +100,7 @@ export default function Roles() {
       <div className="mb-8 flex items-center justify-between">
       <div className="flex items-center space-x-2">
         <Input
-          placeholder="Search roles..."
+          placeholder={t('roles.searchPlaceholder')}
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="w-[300px]"
@@ -110,14 +112,14 @@ export default function Roles() {
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button>
-              + Add Role
+              + {t('roles.actions.addRole')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create Role</DialogTitle>
+              <DialogTitle>{t('roles.create.title')}</DialogTitle>
               <DialogDescription>
-                Add a new role to the system. Enter the role name below.
+                {t('roles.create.description')}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={e => { handleCreateRole(e); if (!createError) setIsCreateDialogOpen(false) }} className="space-y-4">
@@ -150,14 +152,14 @@ export default function Roles() {
         }}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Edit Role</DialogTitle>
+              <DialogTitle>{t('roles.edit.title')}</DialogTitle>
               <DialogDescription>
-                Edit the role name below.
+                {t('roles.edit.description')}
               </DialogDescription>
             </DialogHeader>
             <form onSubmit={e => { e.preventDefault(); if (editingId !== null) handleEditRole(editingId); if (!editError) setIsEditDialogOpen(false) }} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="editRoleName">Role Name</Label>
+                <Label htmlFor="editRoleName">{t('roles.edit.name')}</Label>
                 <Input
                   id="editRoleName"
                   name="editRoleName"
@@ -171,10 +173,10 @@ export default function Roles() {
               {editError && <div className="text-sm text-destructive">{editError}</div>}
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)} disabled={isLoading}>
-                  Cancel
+                  {t('common.actions.cancel')}
                 </Button>
                 <Button type="submit" disabled={isLoading}>
-                  Save Changes
+                  {t('common.actions.save')}
                 </Button>
               </DialogFooter>
             </form>
@@ -186,8 +188,8 @@ export default function Roles() {
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t('roles.table.name')}</TableHead>
+              <TableHead className="text-right">{t('common.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -200,8 +202,8 @@ export default function Roles() {
                 <TableCell className="text-right">
                   {deletingId === role.id ? (
                     <div className="flex gap-2 justify-end">
-                      <Button size="sm" variant="destructive" onClick={() => handleDeleteRole(role.id)}>Confirm</Button>
-                      <Button size="sm" variant="outline" onClick={() => setDeletingId(null)}>Cancel</Button>
+                      <Button size="sm" variant="destructive" onClick={() => handleDeleteRole(role.id)}>{t('common.actions.delete')}</Button>
+                      <Button size="sm" variant="outline" onClick={() => setDeletingId(null)}>{t('common.actions.cancel')}</Button>
                     </div>
                   ) : (
                     <div className="flex gap-2 justify-end">

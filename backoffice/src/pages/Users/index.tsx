@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -55,6 +56,8 @@ interface UserFormProps {
 }
 
 function UserForm({ initialValues = {}, roles, isSubmitting, error, onSubmit, onCancel, isEdit }: UserFormProps) {
+  const { t } = useTranslation()
+
   return (
     <form
       onSubmit={e => {
@@ -70,22 +73,22 @@ function UserForm({ initialValues = {}, roles, isSubmitting, error, onSubmit, on
       className="space-y-4"
     >
       <div className="space-y-2">
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">{t('users.name')}</Label>
         <Input id="name" name="name" required disabled={isSubmitting} defaultValue={initialValues.name || ""} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t('users.email')}</Label>
         <Input id="email" name="email" type="email" required disabled={isSubmitting} defaultValue={initialValues.email || ""} />
       </div>
       <div className="space-y-2">
-      <Label htmlFor="password">{isEdit ? "New Password (leave blank to keep)" : "Password"}</Label>
-      <Input id="password" name="password" type="password" disabled={isSubmitting} required={!isEdit} />
+        <Label htmlFor="password">{isEdit ? t('users.newPassword') : t('users.form.password')}</Label>
+        <Input id="password" name="password" type="password" disabled={isSubmitting} required={!isEdit} />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="roleId">Role</Label>
+        <Label htmlFor="roleId">{t('users.role')}</Label>
         <Select name="roleId" required disabled={isSubmitting} defaultValue={initialValues.roleId || undefined}>
           <SelectTrigger>
-            <SelectValue placeholder="Select a role" />
+            <SelectValue placeholder={t('users.selectRole')} />
           </SelectTrigger>
           <SelectContent>
             {roles.map((role) => (
@@ -99,10 +102,13 @@ function UserForm({ initialValues = {}, roles, isSubmitting, error, onSubmit, on
       {error && <div className="text-sm text-destructive">{error}</div>}
       <DialogFooter>
         <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
-          Cancel
+          {t('common.actions.cancel')}
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? (isEdit ? "Saving..." : "Creating...") : isEdit ? "Save Changes" : "Create User"}
+          {isSubmitting 
+            ? (isEdit ? t('users.actions.saving') : t('users.actions.creating'))
+            : (isEdit ? t('users.actions.saveChanges') : t('users.actions.createUser'))
+          }
         </Button>
       </DialogFooter>
     </form>
@@ -110,6 +116,7 @@ function UserForm({ initialValues = {}, roles, isSubmitting, error, onSubmit, on
 }
 
 export default function Users() {
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState("")
   const [users, setUsers] = useState<User[]>([])
   const [roles, setRoles] = useState<Role[]>([])
@@ -140,7 +147,7 @@ export default function Users() {
         setUsers(usersData)
         setRoles(rolesData)
       } catch (err) {
-        setError('Failed to fetch data')
+        setError(t('users.error.fetchFailed'))
         console.error(err)
       } finally {
         setIsLoading(false)
@@ -148,7 +155,7 @@ export default function Users() {
     }
 
     fetchData()
-  }, [])
+  }, [t])
 
   const handleCreateUser = async (data: { name: string; email: string; password?: string; roleId: string }) => {
     setIsCreating(true)
@@ -161,7 +168,7 @@ export default function Users() {
       setUsers([...users, newUser])
       setIsCreateDialogOpen(false)
     } catch (err) {
-      setCreateError(err instanceof Error ? err.message : 'Failed to create user')
+      setCreateError(err instanceof Error ? err.message : t('users.error.createFailed'))
     } finally {
       setIsCreating(false)
     }
@@ -183,7 +190,7 @@ export default function Users() {
       setIsEditDialogOpen(false)
       setEditingUser(null)
     } catch (err) {
-      setEditError(err instanceof Error ? err.message : 'Failed to update user')
+      setEditError(err instanceof Error ? err.message : t('users.error.updateFailed'))
     } finally {
       setIsEditing(false)
     }
@@ -201,7 +208,7 @@ export default function Users() {
       setIsDeleteDialogOpen(false)
       setDeletingUser(null)
     } catch (err) {
-      setDeleteError(err instanceof Error ? err.message : 'Failed to delete user')
+      setDeleteError(err instanceof Error ? err.message : t('users.error.deleteFailed'))
     } finally {
       setIsDeleting(false)
     }
@@ -214,7 +221,7 @@ export default function Users() {
   )
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>{t('common.loading')}</div>
   }
 
   if (error) {
@@ -226,7 +233,7 @@ export default function Users() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Input
-            placeholder="Search users..."
+            placeholder={t('users.searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-[300px]"
@@ -240,14 +247,14 @@ export default function Users() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add User
+                {t('users.actions.addUser')}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create User</DialogTitle>
+                <DialogTitle>{t('users.create.title')}</DialogTitle>
                 <DialogDescription>
-                  Add a new user to the system. Fill in the details below.
+                  {t('users.create.description')}
                 </DialogDescription>
               </DialogHeader>
               <UserForm
@@ -266,10 +273,10 @@ export default function Users() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t('users.table.name')}</TableHead>
+              <TableHead>{t('users.table.email')}</TableHead>
+              <TableHead>{t('users.table.role')}</TableHead>
+              <TableHead className="w-[100px]">{t('users.table.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -278,29 +285,88 @@ export default function Users() {
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role.name}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        setEditingUser(user)
-                        setIsEditDialogOpen(true)
-                      }}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Dialog open={isEditDialogOpen && editingUser?.id === user.id} onOpenChange={(open) => {
+                      setIsEditDialogOpen(open)
+                      if (!open) setEditingUser(null)
+                    }}>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setEditingUser(user)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>{t('users.edit.title')}</DialogTitle>
+                          <DialogDescription>
+                            {t('users.edit.description')}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <UserForm
+                          initialValues={user}
+                          roles={roles}
+                          isSubmitting={isEditing}
+                          error={editError}
+                          onSubmit={handleEditUser}
+                          onCancel={() => {
+                            setIsEditDialogOpen(false)
+                            setEditingUser(null)
+                          }}
+                          isEdit
+                        />
+                      </DialogContent>
+                    </Dialog>
+
                     {isAdmin && (
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        onClick={() => {
-                          setDeletingUser(user)
-                          setIsDeleteDialogOpen(true)
-                        }}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <Dialog open={isDeleteDialogOpen && deletingUser?.id === user.id} onOpenChange={(open) => {
+                        setIsDeleteDialogOpen(open)
+                        if (!open) setDeletingUser(null)
+                      }}>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeletingUser(user)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t('users.delete.title')}</DialogTitle>
+                            <DialogDescription>
+                              {t('users.delete.description', { name: user.name })}
+                            </DialogDescription>
+                          </DialogHeader>
+                          {deleteError && (
+                            <div className="text-sm text-destructive">{deleteError}</div>
+                          )}
+                          <DialogFooter>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setIsDeleteDialogOpen(false)
+                                setDeletingUser(null)
+                              }}
+                              disabled={isDeleting}
+                            >
+                              {t('common.actions.cancel')}
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              onClick={handleDeleteUser}
+                              disabled={isDeleting}
+                            >
+                              {isDeleting ? t('users.actions.deleting') : t('users.actions.delete')}
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     )}
                   </div>
                 </TableCell>
@@ -309,65 +375,6 @@ export default function Users() {
           </TableBody>
         </Table>
       </div>
-
-      <Dialog open={isEditDialogOpen} onOpenChange={open => {
-        setIsEditDialogOpen(open)
-        if (!open) setEditingUser(null)
-      }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
-            <DialogDescription>
-              Update user details below.
-            </DialogDescription>
-          </DialogHeader>
-          <UserForm
-            initialValues={editingUser ? {
-              ...editingUser,
-              roleId: roles.find(r => r.name === editingUser.role.name)?.id?.toString() || undefined
-            } : {}}
-            roles={roles}
-            isSubmitting={isEditing}
-            error={editError}
-            onSubmit={handleEditUser}
-            onCancel={() => setIsEditDialogOpen(false)}
-            isEdit
-          />
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={isDeleteDialogOpen} onOpenChange={open => {
-        setIsDeleteDialogOpen(open)
-        if (!open) setDeletingUser(null)
-      }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete User</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete {deletingUser?.name}? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          {deleteError && <div className="text-sm text-destructive">{deleteError}</div>}
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setIsDeleteDialogOpen(false)}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={handleDeleteUser}
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Deleting..." : "Delete User"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }

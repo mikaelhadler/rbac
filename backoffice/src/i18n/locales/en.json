@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "actions.save": "Save",
+    "actions.cancel": "Cancel",
+    "actions.delete": "Delete",
+    "actions.edit": "Edit",
+    "actions.create": "Create",
+    "search": "Search",
+    "actions": "Actions"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "invalidCredentials": "Invalid credentials"
+  },
+  "users": {
+    "title": "Users",
+    "actions.addUser": "Add User",
+    "edit.editUser": "Edit User",
+    "edit.title": "Edit User",
+    "edit.description": "Update the user details below.",
+    "form.password": "Password",
+    "deleteUser": "Delete User",
+    "table.name": "Name",
+    "table.email": "Email",
+    "table.role": "Role",
+    "table.actions": "Actions",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "newPassword": "New Password",
+    "confirmDelete": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+    "creating": "Creating...",
+    "saving": "Saving...",
+    "deleting": "Deleting...",
+    "searchPlaceholder": "Search users...",
+    "selectRole": "Select Role",
+    "create.title": "Create User",
+    "create.description": "Enter the user details below.",
+    "actions.createUser": "Add User",
+    "actions.saveChanges": "Save Changes"
+
+  },
+  "roles": {
+    "table.name": "Name",
+    "searchPlaceholder": "Search roles...",
+    "actions.addRole": "Add Role",
+    "edit.title": "Edit Role",
+    "edit.description": "Update the role name below.",
+    "edit.name": "Role Name"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "quickActions": "Quick Actions",
+    "addNewUser": "Add New User",
+    "createUserAccount": "Create a new user account",
+    "registerResident": "Register Resident",
+    "addNewResident": "Add a new resident to the system",
+    "viewReports": "View Reports",
+    "accessReports": "Access system reports and analytics",
+    "totalUsers": "Total Users",
+    "totalResidents": "Total Residents",
+    "activeComplaints": "Active Complaints",
+    "recentActivity": "Recent Activity"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "residents": "Residents",
+    "complaints": "Complaints",
+    "roles": "Roles"
+  },
+  "language": {
+    "en": "English",
+    "pt": "Portuguese",
+    "select": "Select language"
+  }
+} 
