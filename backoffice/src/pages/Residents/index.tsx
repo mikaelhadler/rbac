@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Plus, Search } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface Resident {
   id: string
@@ -21,8 +22,9 @@ interface Resident {
 }
 
 export default function Residents() {
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState("")
-  
+
   // Mock data - replace with actual API call
   const residents: Resident[] = [
     {
@@ -64,7 +66,7 @@ export default function Residents() {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Input
-            placeholder="Search residents..."
+            placeholder={t("residents.searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-[300px]"
@@ -75,7 +77,7 @@ export default function Residents() {
         </div>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          Add Resident
+          {t("residents.addResident")}
         </Button>
       </div>
 
@@ -83,12 +85,12 @@ export default function Residents() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Building</TableHead>
-              <TableHead>Unit</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>{t("residents.name")}</TableHead>
+              <TableHead>{t("residents.email")}</TableHead>
+              <TableHead>{t("residents.building")}</TableHead>
+              <TableHead>{t("residents.unit")}</TableHead>
+              <TableHead>{t("residents.status")}</TableHead>
+              <TableHead className="text-right">{t("residents.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

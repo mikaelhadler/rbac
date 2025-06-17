@@ -80,5 +80,25 @@
     "en": "English",
     "pt": "Portuguese",
     "select": "Select language"
+  },
+  "error": {
+    "invalidCredentials": "Invalid credentials"
+  },
+  "residents": {
+    "searchPlaceholder": "Search residents...",
+    "addResident": "Add Resident",
+    "name": "Name",
+    "email": "Email",
+    "building": "Building",
+    "unit": "Unit",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "complaints": {
+    "title": "Complaints",
+    "all": "All",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "rejected": "Rejected"
   }
-} 
+}

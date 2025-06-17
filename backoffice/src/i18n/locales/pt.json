@@ -82,7 +82,8 @@
     "users": "Usuários",
     "residents": "Moradores",
     "complaints": "Reclamações",
-    "roles": "Funções"
+    "roles": "Funções",
+    "title": "Backoffice"
   },
   "language": {
     "en": "Inglês",
@@ -91,5 +92,22 @@
   },
   "error": {
     "invalidCredentials": "Credenciais inválidas"
+  },
+  "residents": {
+    "searchPlaceholder": "Buscar moradores...",
+    "addResident": "Adicionar Morador",
+    "name": "Nome",
+    "email": "E-mail",
+    "building": "Prédio",
+    "unit": "Apartamento",
+    "status": "Status",
+    "actions": "Ações"
+  },
+  "complaints": {
+    "title": "Reclamações",
+    "all": "Todas",
+    "pending": "Pendente",
+    "accepted": "Aceita",
+    "rejected": "Rejeitada"
   }
-} 
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import api from '../../services/api'
+import { useTranslation } from 'react-i18next'
 
 interface Complaint {
   id: string
@@ -10,7 +11,7 @@ interface Complaint {
 export default function ComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([])
   const [status, setStatus] = useState('')
-
+  const { t } = useTranslation()
   const fetchComplaints = async () => {
     const data = await api.request<Complaint[]>(`/complaints?status=${status}`)
     setComplaints(data)
@@ -30,12 +31,12 @@ export default function ComplaintsPage() {
 
   return (
     <div>
-      <h1>Complaints</h1>
+      <h1>{t("complaints.title")}</h1>
       <select value={status} onChange={e => setStatus(e.target.value)}>
-        <option value="">All</option>
-        <option value="pending">Pending</option>
-        <option value="accepted">Accepted</option>
-        <option value="rejected">Rejected</option>
+        <option value="">{t("complaints.all")}</option>
+        <option value="pending">{t("complaints.pending")}</option>
+        <option value="accepted">{t("complaints.accepted")}</option>
+        <option value="rejected">{t("complaints.rejected")}</option>
       </select>
       <ul>
         {complaints.map(c => (
@@ -43,8 +44,8 @@ export default function ComplaintsPage() {
             {c.description} - {c.status}
             {c.status === 'pending' && (
               <>
-                <button onClick={() => updateStatus(c.id, 'accepted')}>Accept</button>
-                <button onClick={() => updateStatus(c.id, 'rejected')}>Reject</button>
+                <button onClick={() => updateStatus(c.id, 'accepted')}>{t("complaints.accept")}</button>
+                <button onClick={() => updateStatus(c.id, 'rejected')}>{t("complaints.reject")}</button>
               </>
             )}
           </li>
