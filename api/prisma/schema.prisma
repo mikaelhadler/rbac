@@ -17,6 +17,7 @@ model User {
   roleId       Int
   role         Role     @relation(fields: [roleId], references: [id])
   complaints   Complaint[]
+  activityLogs ActivityLog[]
 }
 
 model Role {
@@ -47,4 +48,15 @@ model Complaint {
   approved Boolean @default(false)
   userId   Int
   user     User    @relation(fields: [userId], references: [id])
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  Int?
+  details   String?
+  createdAt DateTime @default(now())
 }

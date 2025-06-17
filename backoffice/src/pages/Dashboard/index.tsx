@@ -13,6 +13,8 @@ export default function Dashboard() {
   const [activeComplaintsError, setActiveComplaintsError] = useState("");
   const [buildingCount, setBuildingCount] = useState<number | null>(null);
   const [buildingCountError, setBuildingCountError] = useState("");
+  const [activities, setActivities] = useState<any[]>([]);
+  const [activitiesError, setActivitiesError] = useState("");
 
   useEffect(() => {
     async function fetchUserCount() {
@@ -66,6 +68,18 @@ export default function Dashboard() {
       }
     }
     fetchBuildingCount();
+  }, []);
+
+  useEffect(() => {
+    async function fetchActivities() {
+      try {
+        const data = await api.request<any[]>("/api/activity");
+        setActivities(data);
+      } catch (err) {
+        setActivitiesError("Failed to fetch activities");
+      }
+    }
+    fetchActivities();
   }, []);
 
   return (
@@ -125,24 +139,32 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between border-b pb-4 last:border-0"
-                >
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      New complaint submitted
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Building A - Unit 101
-                    </p>
+              {activitiesError ? (
+                <div className="text-destructive">{activitiesError}</div>
+              ) : activities.length === 0 ? (
+                <div className="text-muted-foreground">No recent activity.</div>
+              ) : (
+                activities.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-center justify-between border-b pb-4 last:border-0"
+                  >
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {activity.user?.name || activity.user?.email || 'Unknown user'}
+                        {": "}
+                        <span className="font-normal">{activity.action} {activity.entity}</span>
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {activity.details}
+                      </p>
+                    </div>
+                    <div className="text-xs text-muted-foreground whitespace-nowrap">
+                      {new Date(activity.createdAt).toLocaleString()}
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {i} hour{i !== 1 ? "s" : ""} ago
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>

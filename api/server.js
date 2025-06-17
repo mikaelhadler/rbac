@@ -8,12 +8,14 @@ import usersRoutes from './src/routes/users.js';
 import residentsRoutes from './src/routes/residents.js';
 import complaintsRoutes from './src/routes/complaints.js';
 import rolesRoutes from './src/routes/roles.js';
+import activityRoutes from './src/routes/activity.js';
 
 const fastify = Fastify({ logger: true });
 
 await fastify.register(cors, {
   origin: true,
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 });
 
 await fastify.register(prismaPlugin);
@@ -25,6 +27,7 @@ await fastify.register(usersRoutes, { prefix: '/api' });
 await fastify.register(residentsRoutes, { prefix: '/api' });
 await fastify.register(complaintsRoutes, { prefix: '/api' });
 await fastify.register(rolesRoutes, { prefix: '/api' });
+await fastify.register(activityRoutes, { prefix: '/api' });
 
 fastify.get('/', async () => ({ status: 'ok' }));
 

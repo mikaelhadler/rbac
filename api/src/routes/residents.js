@@ -1,3 +1,5 @@
+import { logActivity } from '../plugins/activityLog.js'
+
 export default async function (fastify) {
   fastify.get('/residents', {
     preHandler: [fastify.authenticate, fastify.hasPermission('create_resident')]
@@ -9,10 +11,18 @@ export default async function (fastify) {
     preHandler: fastify.authenticate
   }, async (request) => {
     const { name } = request.body;
-    return fastify.prisma.user.update({
+    const updated = await fastify.prisma.user.update({
       where: { id: request.user.id },
       data: { name }
     });
+    await logActivity(fastify, {
+      userId: request.user.id,
+      action: 'update',
+      entity: 'resident',
+      entityId: updated.id,
+      details: `Updated own resident name to ${name}`
+    })
+    return updated;
   });
 
   fastify.put('/residents/:id', {
@@ -24,7 +34,15 @@ export default async function (fastify) {
     }
     if (reply.sent) return;
     const { name } = request.body;
-    return fastify.prisma.user.update({ where: { id: targetId }, data: { name } });
+    const updated = await fastify.prisma.user.update({ where: { id: targetId }, data: { name } });
+    await logActivity(fastify, {
+      userId: request.user.id,
+      action: 'update',
+      entity: 'resident',
+      entityId: updated.id,
+      details: `Updated resident ${updated.name}`
+    })
+    return updated;
   });
 
   fastify.delete('/residents/:id', {
@@ -32,6 +50,20 @@ export default async function (fastify) {
   }, async (request) => {
     const id = Number(request.params.id);
     await fastify.prisma.user.delete({ where: { id } });
+    await logActivity(fastify, {
+      userId: request.user.id,
+      action: 'delete',
+      entity: 'resident',
+      entityId: id,
+      details: `Deleted resident ${id}`
+    })
     return { ok: true };
   });
+
+  fastify.get('/residents/count', {
+    preHandler: [fastify.authenticate, fastify.hasPermission('manage_users')]
+  }, async () => {
+    const count = await fastify.prisma.user.count({ where: { role: { name: 'resident' } } })
+    return { count }
+  })
 }
