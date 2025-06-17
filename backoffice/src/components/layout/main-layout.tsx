@@ -1,7 +1,8 @@
 import { ReactNode } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/hooks/useAuth"
 import {
   LayoutDashboard,
   Users,
@@ -25,6 +26,13 @@ const navigation = [
 
 export function MainLayout({ children }: MainLayoutProps) {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
+
+  const handleLogout = () => {
+    logout()
+    navigate("/login")
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,9 +65,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           <Button
             variant="ghost"
             className="w-full justify-start text-muted-foreground hover:text-accent-foreground"
-            onClick={() => {
-              // Handle logout
-            }}
+            onClick={handleLogout}
           >
             <LogOut className="mr-3 h-5 w-5" />
             Logout

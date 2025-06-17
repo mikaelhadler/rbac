@@ -143,6 +143,37 @@ export default async function (fastify) {
     }
   );
 
+  fastify.delete(
+    "/users/:id",
+    {
+      preHandler: [fastify.authenticate, fastify.hasPermission("manage_users")],
+    },
+    async (request, reply) => {
+      const userId = Number(request.params.id);
+      const user = await fastify.prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) {
+        return reply.code(404).send({ error: "User not found" });
+      }
+
+      await fastify.prisma.user.delete({
+        where: { id: userId },
+      });
+
+      await logActivity(fastify, {
+        userId: request.user.id,
+        action: 'delete',
+        entity: 'user',
+        entityId: userId,
+        details: `Deleted user ${user.email}`
+      });
+
+      return { ok: true };
+    }
+  );
+
   fastify.get('/users/count', {
     preHandler: [fastify.authenticate, fastify.hasPermission('manage_users')]
   }, async () => {

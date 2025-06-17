@@ -3,6 +3,21 @@ export default async function (fastify) {
     const { email, password } = request.body;
     const token = await fastify.login(email, password);
     if (!token) return reply.code(401).send({ error: 'invalid credentials' });
-    return { token };
+
+    const user = await fastify.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: {
+          select: {
+            name: true
+          }
+        }
+      }
+    });
+
+    return { token, user };
   });
 }

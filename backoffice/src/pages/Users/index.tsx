@@ -26,8 +26,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Plus, Search, Pencil } from "lucide-react"
+import { Plus, Search, Pencil, Trash2 } from "lucide-react"
 import api from "@/services/api"
+import { useAuth } from "@/hooks/useAuth"
 
 interface User {
   id: string
@@ -116,11 +117,20 @@ export default function Users() {
   const [error, setError] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [createError, setCreateError] = useState("")
   const [editError, setEditError] = useState("")
+  const [deleteError, setDeleteError] = useState("")
   const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [deletingUser, setDeletingUser] = useState<User | null>(null)
+  const { user: currentUser } = useAuth()
+
+  console.log('Current user:', currentUser)
+  const isAdmin = currentUser?.role?.name === "administrator"
+  console.log('Is admin:', isAdmin)
 
   useEffect(() => {
     async function fetchData() {
@@ -181,6 +191,23 @@ export default function Users() {
     }
   }
 
+  const handleDeleteUser = async () => {
+    if (!deletingUser) return
+    setIsDeleting(true)
+    setDeleteError("")
+    try {
+      await api.request(`/api/users/${deletingUser.id}`, {
+        method: 'DELETE',
+      })
+      setUsers(users.filter(u => u.id !== deletingUser.id))
+      setIsDeleteDialogOpen(false)
+      setDeletingUser(null)
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : 'Failed to delete user')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
 
   const filteredUsers = users.filter(
     (user) =>
@@ -234,31 +261,6 @@ export default function Users() {
               />
             </DialogContent>
           </Dialog>
-          <Dialog open={isEditDialogOpen} onOpenChange={open => {
-            setIsEditDialogOpen(open)
-            if (!open) setEditingUser(null)
-          }}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit User</DialogTitle>
-                <DialogDescription>
-                  Update user details below.
-                </DialogDescription>
-              </DialogHeader>
-              <UserForm
-                initialValues={editingUser ? {
-                  ...editingUser,
-                  roleId: roles.find(r => r.name === editingUser.role.name)?.id?.toString() || undefined
-                } : {}}
-                roles={roles}
-                isSubmitting={isEditing}
-                error={editError}
-                onSubmit={handleEditUser}
-                onCancel={() => setIsEditDialogOpen(false)}
-                isEdit
-              />
-            </DialogContent>
-          </Dialog>
         </div>
       </div>
 
@@ -275,22 +277,99 @@ export default function Users() {
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
+                <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.role.name}</TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="sm" onClick={() => {
-                    setEditingUser(user)
-                    setIsEditDialogOpen(true)
-                  }}>
-                    <Pencil className="w-4 h-4 mr-1" /> Edit
-                  </Button>
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        setEditingUser(user)
+                        setIsEditDialogOpen(true)
+                      }}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    {isAdmin && (
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => {
+                          setDeletingUser(user)
+                          setIsDeleteDialogOpen(true)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={open => {
+        setIsEditDialogOpen(open)
+        if (!open) setEditingUser(null)
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit User</DialogTitle>
+            <DialogDescription>
+              Update user details below.
+            </DialogDescription>
+          </DialogHeader>
+          <UserForm
+            initialValues={editingUser ? {
+              ...editingUser,
+              roleId: roles.find(r => r.name === editingUser.role.name)?.id?.toString() || undefined
+            } : {}}
+            roles={roles}
+            isSubmitting={isEditing}
+            error={editError}
+            onSubmit={handleEditUser}
+            onCancel={() => setIsEditDialogOpen(false)}
+            isEdit
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={open => {
+        setIsDeleteDialogOpen(open)
+        if (!open) setDeletingUser(null)
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {deletingUser?.name}? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          {deleteError && <div className="text-sm text-destructive">{deleteError}</div>}
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleDeleteUser}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

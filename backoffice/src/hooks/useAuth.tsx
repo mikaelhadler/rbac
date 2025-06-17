@@ -4,7 +4,9 @@ interface User {
   id: string
   name: string
   email: string
-  role: string
+  role: {
+    name: string
+  }
 }
 
 interface AuthContextValue {
