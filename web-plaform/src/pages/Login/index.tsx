@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 export default function Login() {
   const navigate = useNavigate()
@@ -79,13 +80,24 @@ export default function Login() {
               <div className="text-sm text-destructive">{error}</div>
             )}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex flex-col gap-4">
             <Button
               type="submit"
+              variant="outline"
               className="w-full"
               disabled={isLoading}
             >
               {isLoading ? 'Entrando...' : 'Entrar'}
+            </Button>
+            <Separator className="bg-gray-400 my-4" />
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={() => navigate("/register")}
+            >
+              Registre-se
             </Button>
           </CardFooter>
         </form>

@@ -1,23 +1,20 @@
-import { AppRoutes } from "@/routes"
-// import { MainLayout } from "@/components/layout/main-layout"
-// import { PrivateRoute } from "@/components/PrivateRoute"
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
+import { Toaster } from "@/components/ui/toaster"
+import { RegisterBuildingManager } from "@/pages/RegisterBuildingManager"
+import { CompleteProfile } from "@/pages/CompleteProfile"
+import Login from "./pages/Login"
 
 function App() {
   return (
-    <AppRoutes />
-    //     {/* <Route
-    //       path="/"
-    //       element={
-    //         <PrivateRoute>
-    //           <MainLayout>
-    //             <Dashboard />
-    //           </MainLayout>
-    //         </PrivateRoute>
-    //       }
-    //     /> */}
-    //     <Route path="*" element={<Navigate to="/" replace />} />
-    //   </Routes>
-    // </Router>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegisterBuildingManager />} />
+        <Route path="/complete-profile" element={<CompleteProfile />} />
+      </Routes>
+      <Toaster />
+    </Router>
   )
 }
 
